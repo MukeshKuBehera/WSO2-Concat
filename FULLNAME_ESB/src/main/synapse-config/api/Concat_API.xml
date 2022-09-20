@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/fullname" name="Cancat_API" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="POST">
+        <inSequence>
+            <property description="fname" expression="json-eval($.firstname)" name="fName" scope="default" type="STRING"/>
+            <property description="lname" expression="json-eval($.lastname)" name="lName" scope="default" type="STRING"/>
+            <log description="view name" level="custom">
+                <property expression="get-property('fName')" name="firstName"/>
+                <property expression="get-property('lName')" name="lastName"/>
+            </log>
+            <!-- <property expression="fn:concat($ctx:fName,$ctx:lName)" name="fullName" scope="default" type="STRING"/> -->
+            <payloadFactory description="Full_Name" media-type="json">
+                <format>{ "FullName" : "$1",&#xd;
+"FullName" : "$2"}</format>
+                <args>
+                    <arg evaluator="xml" expression="get-property('fName')"/>
+                    <arg evaluator="xml" expression="get-property('lName')"/>
+                </args>
+            </payloadFactory>
+            <log description="result" level="full">
+                <property expression="get-property('firstName')" name="FirstName"/>
+                <property expression="get-property('lastName')" name="LastName"/>
+            </log>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
